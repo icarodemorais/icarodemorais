@@ -35,17 +35,6 @@
 <br />
 <br />
 
----
-
-### 📺 Latest YouTube Videos
-<!-- YOUTUBE:START -->
-- [SPEED RUN: Build a CRUD API with PrestoAPI & MongoDB Atlas in 9 Minutes! Then Airbnb Clone!](https://www.youtube.com/watch?v=6C45qCt41VY)
-- [Building BATTLESHIPS Multiplayer Game with Node.js, Express, Socket.io, Heroku | (2/3)](https://www.youtube.com/watch?v=TpAwggQJPUQ)
-- [GSAP Typing Animation | Tween & Timeline Basics (2020)](https://www.youtube.com/watch?v=ZT66N5hBiCE)
-- [Next Level GitHub Profile README (NEW) | How To Create An Amazing Profile ReadMe With GitHub Actions](https://www.youtube.com/watch?v=ECuqb5Tv9qI)
-- [There's more to CONSOLE than .log( ) | Things you didn't know console could do!!](https://www.youtube.com/watch?v=_-bHhEGcDiQ)
-<!-- YOUTUBE:END -->
-
 <img align="left" alt="Ícaro's Github Stats" src="https://github-readme-stats.codestackr.vercel.app/api?username=icarodemorais&show_icons=true&hide_border=true&theme=prussian" />
 
 [website]: https://icaro.dev
