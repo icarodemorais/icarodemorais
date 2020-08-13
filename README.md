@@ -1,4 +1,4 @@
-### Hi there, I'm [Ícaro de Morais][website]  <img src="https://media.giphy.com/media/LtyCLMYGfZ4BO/giphy.gif" width="20">
+### Hi there, I'm [Ícaro de Morais][website]  <img src="https://media.giphy.com/media/nlxhDPecazKtW/giphy.gif" width="20">
 
 ## I'm a Software Engineer solving problems and innovating the real estate market in Brazil!
 - 🔭 I’m currently working on my graduation project!
@@ -46,7 +46,7 @@
 - [There's more to CONSOLE than .log( ) | Things you didn't know console could do!!](https://www.youtube.com/watch?v=_-bHhEGcDiQ)
 <!-- YOUTUBE:END -->
 
-<img align="left" alt="codeSTACKr's Github Stats" src="https://github-readme-stats.codestackr.vercel.app/api?username=icarodemorais&show_icons=true&hide_border=true" />
+<img align="left" alt="Ícaro's Github Stats" src="https://github-readme-stats.codestackr.vercel.app/api?username=icarodemorais&show_icons=true&hide_border=true&theme=prussian" />
 
 [website]: https://icaro.dev
 [twitter]: https://twitter.com/_IcaroMorais
