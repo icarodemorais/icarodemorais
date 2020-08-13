@@ -1,4 +1,4 @@
-### Hi there, I'm [Ícaro de Morais][website] 👋 <img src="https://media.giphy.com/media/LtyCLMYGfZ4BO/giphy.gif" width="50">
+### Hi there, I'm [Ícaro de Morais][website]  <img src="https://media.giphy.com/media/LtyCLMYGfZ4BO/giphy.gif" width="20">
 
 ## I'm a Husband, Father, Developer, and Teacher!
 - 🔭 I’m currently working on my graduation project!
