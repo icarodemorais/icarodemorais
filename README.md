@@ -3,7 +3,7 @@
 ## I'm a Husband, Father, Developer, and Teacher!
 - 🔭 I’m currently working on my graduation project!
 - 🌱 I’m currently learning ReactJs and TypeScript
-- 🥅 2020 Goals: Contribute to an Open Source projects
+- 🥅 2020 Goals: Contribute to an Open Source projects!
 - ⚡ Fun fact: I trully the art of cinema
 
 ### Connect with me:
