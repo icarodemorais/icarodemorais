@@ -4,7 +4,7 @@
 - 🔭 I’m currently working on my graduation project!
 - 🌱 I’m currently learning ReactJs and TypeScript
 - 🥅 2020 Goals: Contribute to an Open Source projects!
-- ⚡ Fun fact: I trully the art of cinema
+- ⚡ Fun fact: I trully love the art of cinema
 
 ### Connect with me:
 
