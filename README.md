@@ -6,9 +6,9 @@
 
 </p>
 
-- 🔭 I’m currently working on my graduation project!
+- 🔭 I’m currently working on Open Banking!
 - 🌱 I’m currently learning ReactJs and TypeScript
-- 🥅 2020 Goals: Contribute to an Open Source projects!
+- 🥅 2022 Goals: Improve my AWS Skills!
 - ⚡ Fun fact: I trully love the art of cinema
 
 ### I'm also learning CS:GO  <img src="https://media.giphy.com/media/kv5X9Unw1kETq02FfZ/giphy.gif" width="20">
