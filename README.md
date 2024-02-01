@@ -2,16 +2,15 @@
 
 <p align="left">
 
-  I'm a Software Engineer who has worked in the development and release of many products focused on the real state market @ Grupo SmartS, in Brazil, since I was 17. All of those being web applications, where I worked directly in their development. Now I'm on the third and last year of my Systems Analysis and Development course at Fatec São Caetano, I'm the leader of the development team @ Grupo SmartS and I'm learning React and Typescript JS.
+  I'm a Software Engineer who has worked in the development and release of many products focused on the real state market @ Grupo SmartS, in Brazil, since I was 17. All of those being web applications, where I worked directly in their development. Now I'm on the third and last year of my Systems Analysis and Development course at Fatec São Caetano, I'm a leader of one development team @ Itau Unibanco, Brazil's largest private bank, and I'm attending a MBA on solutions archtecture at FIAP.
 
 </p>
 
-- 🔭 I’m currently working on Open Banking!
-- 🌱 I’m currently learning ReactJs and TypeScript
-- 🥅 2022 Goals: Improve my AWS Skills!
+- 🔭 I’m currently working on a new product for Itau!
+- 🌱 I’m currently learning Leadership skills and A.I
 - ⚡ Fun fact: I trully love the art of cinema
 
-### I'm also learning CS:GO  <img src="https://media.giphy.com/media/kv5X9Unw1kETq02FfZ/giphy.gif" width="20">
+### I'm still learning Counter Strike <img src="https://media.giphy.com/media/kv5X9Unw1kETq02FfZ/giphy.gif" width="20">
 
 ### Connect with me:
 
