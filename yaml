@@ -2,15 +2,6 @@ openapi: 3.0.3
 info:
   title: 60ASO / ARQUITETURA MICROSERVIÇOS / API E DIGITALOPS
   description: |-
-    Trabalho para conclusão da disciplina de arquitetura microserviços. Entrega de catálogo de Serviços de Negócios no formato de contrato OpenAPI 3.0.
-    
-    Deverá ser entregue os diagramas de arquitetura de aplicação e de dados (free-form ou ArchiMate) do problema proposto. 
-    
-    Na arquitetura de aplicação deverá ser apresentado os serviços modelados a partir dos processos descritos no item 2, relacionados com os desejos do item 1, utilizando um conjunto de padrões de arquitetura de microsserviços conforme necessidade. 
-    
-    Na arquitetura de dados deverão ser apresentadas as estruturas de tabelas, collections, etc, conforme cada tipo de banco de dados utilizado, assim como estruturas AVRO/JSON de cada tópico de mensageria. Caso utilizado arquitetura Big Data e afins, apresentar também na arquitetura de dados a diagramação detalhando os fluxos de dados necessários para a solução proposta.
-    
-    ;;;;;;
     
     Essa específicação é composta das APIs que foram descritas no catalogo de serviço como resposta da atividade do projeto InvestX.
     
@@ -592,7 +583,7 @@ components:
           description: Flag informando se o cliente está ativo ou não
         inactivationReason:
           type: string
-          enum: [onboard, fraud, other]
+          enum: [ONBOARD, FRAUD, OTHER]
           description: |
             Enum com o motivo de inativação do cliente
             Onboard: Alguma informação fornecida no cadastrado está incorreta ou o processo de análise do cadastro ou ainda não foi concluído ou teve um resultado negativo.
