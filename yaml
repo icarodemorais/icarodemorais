@@ -10,9 +10,18 @@ info:
     
     Na arquitetura de dados deverão ser apresentadas as estruturas de tabelas, collections, etc, conforme cada tipo de banco de dados utilizado, assim como estruturas AVRO/JSON de cada tópico de mensageria. Caso utilizado arquitetura Big Data e afins, apresentar também na arquitetura de dados a diagramação detalhando os fluxos de dados necessários para a solução proposta.
     
+    ;;;;;;
     
-    autenticação via client credentials
-    recursos com /external serão consumidos por clientes externos, por isso precisam ser autenticados e precisam para autenticação
+    Essa específicação é composta das APIs que foram descritas no catalogo de serviço como resposta da atividade do projeto InvestX.
+    
+    Aqui estão descritas APIs internas e externas.
+    
+    As APIs externas (com o path começando com /external), serão consumidas pelo BFF e tem como requisito a requisição ser autenticada, usando a requisição definida na camada de autenticação.
+    
+    As APIs internas (com o path começando com /internal), serão consumidas por serviços internos, e não tem a necessidade da requisição ser autenticada.
+    
+    Autenticação via client credentials
+    recursos com /external serão consumidos por clientes externos, por isso precisam ser autenticados e precisam para autenticação.
     
   contact:
     email: icarodemorais@hotmail.com
@@ -20,23 +29,58 @@ info:
 servers:
   - url: https://investx.fiap.com/60aso/v1
 tags:
+  - name: authentication-layer
+    description: Camada de autenticação via client-credentials que deve ser utilizada para a emissão do token que viabilizara o consumo de recursos externos.
   - name: customer-management
-    description: Atualizações e pesquisas de dados de clientes
+    description: Recursos externos que expõem as capacidades relacionadas a gestão de cliente, como criação e busca.
   - name: transaction-management
-    description: Gerenciamento de transações de clientes
+    description: Recursos externos que expõem as capacidades relacionadas a gestão de uma transação, como busca e trigger de processamento.
   - name: transaction-orchestrator
-    description: Orquestra transações de clientes
+    description: Recurso interno que viabilizara o inicio do processamento de uma transação. Esse recurso é exposto pelo serviço que será responsável pela orquestração das jornadas necessárias para uma transação ser processada. Essas jornadas não fizeram parte do catalogo de serviço e por conta disso não fizeram parte dessa especificação.
   - name: transaction-data
-    description: Transação do cliente
+    description: Recursos interno que expõem as capacidades relacionadas a gestão de transações. Esses recursos são expostos pelo serviço que tem as responsabilidades de viabilizar validações na camada de persistência, centralizar e, de fato, realizar a comunicação com o banco de dados.
   - name: customer-data
-    description: Informações do cliente
+    description: Recursos interno que expõem as capacidades relacionadas a gestão de clientes. Esses recursos são expostos pelo serviço que tem as responsabilidades de viabilizar validações na camada de persistência, centralizar e, de fato, realizar a comunicação com o banco de dados.
+    
 paths:
+  /external/oauth/token:
+    post:
+      tags:
+        - authentication-layer
+      summary: Geração de um novo token
+      requestBody:
+        description: Create a new pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Requisição processada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'          
+        '400':
+          description: Corpo da requisição com informações invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '500':
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
   /external/customers:
     post:
       tags:
         - customer-management
       summary: Adiciona um novo cliente
       description: Adiciona um novo cliente
+      security:
+        - bearerAuth: []
       requestBody:
         description: Create a new pet in the store
         content:
@@ -56,6 +100,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
         '500':
           description: Erro interno ao realizar requisição
           content:
@@ -67,6 +113,8 @@ paths:
       tags:
         - customer-management
       summary: Consulta os dados do cliente através do id
+      security:
+        - bearerAuth: []
       parameters:
         - name: customerId
           in: path
@@ -88,6 +136,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
         '500':
           description: Erro interno ao realizar requisição
           content:
@@ -98,6 +148,8 @@ paths:
       tags:
         - customer-management
       summary: Atualiza dados de clientes
+      security:
+        - bearerAuth: []
       parameters:
         - name: customerId
           in: path
@@ -119,6 +171,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
         '500':
           description: Erro interno ao realizar requisição
           content:
@@ -130,6 +184,8 @@ paths:
       tags:
         - customer-management
       summary: Atualiza status de clientes
+      security:
+        - bearerAuth: []
       parameters:
         - name: customerId
           in: path
@@ -158,6 +214,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
         '500':
           description: Erro interno ao realizar requisição
           content:
@@ -169,6 +227,8 @@ paths:
       tags:
         - transaction-management
       summary: Busca de transação por Id
+      security:
+        - bearerAuth: []
       description: ''
       parameters:
         - name: transactionId
@@ -190,6 +250,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
         '500':
           description: Erro interno ao realizar requisição
           content:
@@ -201,6 +263,8 @@ paths:
       tags:
         - transaction-management
       summary: Inicia o processamento de uma transação
+      security:
+        - bearerAuth: []
       parameters:
         - name: transactionId
           in: path
@@ -218,6 +282,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
         '500':
           description: Erro interno ao realizar requisição
           content:
@@ -425,7 +491,7 @@ paths:
         - name: transactionId
           in: path
           description: Identificador único da transação
-          required: false
+          required: true
           schema:
             type: string
       responses:
@@ -464,7 +530,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Transaction'
+              $ref: '#/components/schemas/TransactionEvent'
         required: true
       responses:
         '200':
@@ -472,7 +538,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransactionResponse'          
+                $ref: '#/components/schemas/Transaction'          
         '400':
           description: Corpo da requisição com informações invalidas
           content:
@@ -485,39 +551,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /registraEventosTransacao:
-    post:
-      tags:
-        - transaction-data
-      summary: Regista evento transação
-      description: Regista evento transação
-      requestBody:
-        description: Regista evento transação
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Customer'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Customer'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Customer'
-        required: true
-      responses:
-        '200':
-          description: Requisição processada com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Customer'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Customer'
-        '400':
-          description: Evento informado inválido
-        '500':
-          description: Erro interno ao registrar novo evento na transação
 components:
   schemas:
     PostCustomerInternal:
@@ -634,7 +667,7 @@ components:
             SELL: indica se o registro em questão se refere a venda de algum ativo
         status:
           type: string
-          enum: [PEINDING, PENDING_APPROVALS, ON_QUEUE, PROCESSING, SUCCESS, FAILURE]
+          enum: [PEINDING, PENDING_APPROVALS, ON_QUEUE, PROCESSING, SUCCESS, FAILURE, DENIED]
           description: |
             Campo faz referência ao estado atual da transação
             PEINDING: indica que o processamento da transação está pendente 
@@ -646,8 +679,7 @@ components:
         idempotence:
           type: array
           items:
-            type: string
-            enum: [PEINDING, PENDING_APPROVALS, ON_QUEUE, PROCESSING, SUCCESS, FAILURE]
+            $ref: '#/components/schemas/TransactionEvent'
         approvals:
           type: object
           description: Objeto que contempla o status das aprovações, quando pertinente
@@ -679,6 +711,58 @@ components:
           description: Data de quando o processamento da transação foi concluído
     TransactionEvent:
       type: object
+      properties:
+        type:
+          type: string
+          enum: [REQUEST_TO_PROCESS, APPROVALS_GRANTED, APPROVALS_DENIED, MOVED_TO_PROCESSING_QUEUE, START_TO_PROCESS, PROCESS_RESULTED_ERROR, PROCESS_RESULTED_ERROR]
+          description: |
+            REQUEST_TO_PROCESS: solicitação de processamento de transação recebida
+            APPROVALS_GRANTED: aprovação concedida 
+            APPROVALS_DENIED: aprovação negada 
+            MOVED_TO_PROCESSING_QUEUE: movimentação para fila de processamento
+            START_TO_PROCESS: inicio de processamento
+            PROCESS_RESULTED_ERROR: processamento resultou em erro
+            PROCESS_RESULTED_SUCCESS: processamento resultou em sucesso
+        origin: 
+          type: string
+          enum: [USER, FRAUD, BUSINESS, AUTOMATIC]
+          description:  |
+            USER: evento registrado tendo como origem uma solicitação do cliente
+            FRAUD: evento registrado tendo como origem uma solicitação do setor de análise de fraudes 
+            BUSINESS: evento registrado tendo como origem uma solicitação do setor de negócios
+            AUTOMATIC: evento registrado tendo como origem uma solicitação automatica das jornadas da plataforma
+        date:
+          type: string
+          format: date
+        reason:
+          type: string
+        details:
+          type: string
+    AuthRequest:
+      type: object
+      properties:
+        grant_type: 
+          type: string
+          enum: [refreshToken, clientCredentials]
+        clientId:
+          type: string
+          format: uuid
+        clientSecret:
+          type: string
+          format: uuid
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: number
+        scopes:
+          type: string
     BadRequestResponse:
       type: object
       properties:
@@ -696,3 +780,11 @@ components:
               errorDescription:
                 type: string
                 description: descrição do erro que foi identificado no campo
+  responses:
+    UnauthorizedError:
+      description: Access token não foi informado ou é inválido
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
