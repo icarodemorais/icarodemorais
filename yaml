@@ -10,10 +10,13 @@ info:
     
     Na arquitetura de dados deverão ser apresentadas as estruturas de tabelas, collections, etc, conforme cada tipo de banco de dados utilizado, assim como estruturas AVRO/JSON de cada tópico de mensageria. Caso utilizado arquitetura Big Data e afins, apresentar também na arquitetura de dados a diagramação detalhando os fluxos de dados necessários para a solução proposta.
     
+    
+    autenticação via client credentials
+    recursos com /external serão consumidos por clientes externos, por isso precisam ser autenticados e precisam para autenticação
+    
   contact:
     email: icarodemorais@hotmail.com
   version: 1.0.0
-  url: http://swagger.io
 servers:
   - url: https://investx.fiap.com/60aso/v1
 tags:
@@ -23,12 +26,12 @@ tags:
     description: Gerenciamento de transações de clientes
   - name: transaction-orchestrator
     description: Orquestra transações de clientes
-  - name: customer-data
-    description: Informações do cliente
   - name: transaction-data
     description: Transação do cliente
+  - name: customer-data
+    description: Informações do cliente
 paths:
-  /customers:
+  /external/customers:
     post:
       tags:
         - customer-management
@@ -59,7 +62,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /customers/{customerId}:
+  /external/customers/{customerId}:
     get:
       tags:
         - customer-management
@@ -122,7 +125,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /customers/{customerId}/status:
+  /external/customers/{customerId}/status:
     patch:
       tags:
         - customer-management
@@ -161,50 +164,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /registraCliente:
-    post:
-      tags:
-        - customer-data
-      summary: Registra cliente
-      description: Registra cliente
-      requestBody:
-        description: Registra cliente
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-        required: true
-      responses:
-        '200':
-          description: Requisição processada com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Campos informados possuem erro
-        '500':
-          description: Erro interno ao realizar o cadastro
-  /buscaCliente:
+  /external/transaction/{transactionId}:
     get:
       tags:
-        - customer-data
-      summary: Busca cliente
+        - transaction-management
+      summary: Busca de transação por Id
       description: ''
       parameters:
-        - name: cpf
-          in: query
-          description: CPF do cliente
-          required: false
+        - name: transactionId
+          in: path
+          description: identificador único da transação
+          required: true
           schema:
             type: string
       responses:
@@ -213,37 +183,188 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'
+                $ref: '#/components/schemas/TransactionResponse'          
         '400':
-          description: CPF inválido ou não informado
+          description: Corpo da requisição com informações invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
         '500':
-          description: Erro interno ao realizar a consulta
-  /atualizaCadastroCliente:
-    patch:
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /external/transaction/{transactionId}/process:
+    post:
+      tags:
+        - transaction-management
+      summary: Inicia o processamento de uma transação
+      parameters:
+        - name: transactionId
+          in: path
+          description: Identificador unico da transação
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Solicitação de processamento de transação registrada com sucesso
+        '400':
+          description: Transação invalida ou não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '500':
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /internal/transaction/{transactionId}/process:
+    post:
+      tags:
+        - transaction-orchestrator
+      summary: Processa transação
+      parameters:
+        - name: transactionId
+          in: path
+          description: Identificador unico da transação
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Solicitação de processamento de transação registrada com sucesso
+        '400':
+          description: Transação invalida ou não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '500':
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /internal/customers:
+    post:
       tags:
         - customer-data
-      summary: Atualiza dados de clientes
-      description: Atualiza dados de clientes
-      operationId: updateCPF
+      summary: Adiciona um novo cliente
+      description: Adiciona um novo cliente
       requestBody:
-        description: Atualiza o cadastro dos clientes
+        description: Create a new pet in the store
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
+              $ref: '#/components/schemas/PostCustomerInternal'
+      responses:
+        '200':
+          description: Requisição processada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'          
+        '400':
+          description: Corpo da requisição com informações invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '500':
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /internal/customers/{customerId}:
+    get:
+      tags:
+        - customer-data
+      summary: Consulta os dados do cliente através do id
+      parameters:
+        - name: customerId
+          in: path
+          description: Identificador unico do cliente
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Requisição processada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'          
+        '400':
+          description: Corpo da requisição com informações invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '500':
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    put:
+      tags:
+        - customer-data
+      summary: Atualiza dados de clientes
+      parameters:
+        - name: customerId
+          in: path
+          description: Identificador unico do cliente
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+        required: true
+      responses:
+        '400':
+          description: Corpo da requisição com informações invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        '500':
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /internal/customers/{customerId}/status:
+    patch:
+      tags:
+        - customer-data
+      summary: Atualiza status de clientes
+      parameters:
+        - name: customerId
+          in: path
+          description: Identificador unico do cliente
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Atualiza status dos clientes
+        content:
+          application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/UpdateCustomerStatusRequest'
         required: true
       responses:
         '200':
@@ -251,74 +372,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: '#/components/schemas/CustomerStatus'          
         '400':
-          description: Campos informados possuem erro
-        '500':
-          description:  Erro interno ao realizar a atualização
-      security:
-        - clientestore_auth:
-            - write:clientes
-            - read:clientes
-  /atualizaStatusCliente_:
-    patch:
-      tags:
-        - customer-data
-      summary: Atualiza dados de clientes
-      description: Atualiza dados de clientes
-      operationId: updateCPF
-      requestBody:
-        description: Atualiza o cadastro dos clientes
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-        required: true
-      responses:
-        '200':
-          description: Requisição processada com sucesso
+          description: Corpo da requisição com informações invalidas
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Campos informados possuem erro
+                $ref: '#/components/schemas/BadRequestResponse'
         '500':
-          description: Erro interno ao realizar a atualização
-      security:
-        - clientestore_auth:
-            - write:clientes
-            - read:clientes
-  /cadastraTransacao:
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /internal/transaction:
     post:
       tags:
         - transaction-data
       summary: Cadastra transação
-      description: Cadastra transação
       requestBody:
         description: Cadastra transação
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/Transaction'
         required: true
       responses:
         '200':
@@ -326,24 +403,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: '#/components/schemas/TransactionResponse'          
         '400':
-          description: Erro de validação nos campos informados
+          description: Corpo da requisição com informações invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
         '500':
-          description: Erro interno ao cadastrar transacao
-  /consultaTransacao:
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /internal/transaction/{transactionId}:
     get:
       tags:
         - transaction-data
       summary: Consulta transações
-      description: ''
       parameters:
-        - name: cpf
-          in: query
-          description: CPF do cliente
+        - name: transactionId
+          in: path
+          description: Identificador único da transação
           required: false
           schema:
             type: string
@@ -353,74 +434,37 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'
+                $ref: '#/components/schemas/TransactionResponse'          
         '400':
-          description: Erro de validação nos campos informados
-        '500':
-          description: Erro interno ao buscar transacao
-  /atualizaStatusTransacao:
-    patch:
-      tags:
-        - transaction-data
-      summary: Atualiza status transações
-      description: Atualiza status transações
-      operationId: updateCPF
-      requestBody:
-        description: Atualiza status transações
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-        required: true
-      responses:
-        '200':
-          description: Requisição processada com sucesso
+          description: Corpo da requisição com informações invalidas
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Status informado inválido
+                $ref: '#/components/schemas/BadRequestResponse'
         '500':
-          description: Erro interno ao atualizar status da transação
-      security:
-        - clientestore_auth:
-            - write:clientes
-            - read:clientes
-  /registraIdempotenciaTransacao:
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /internal/transaction/{transactionId}/idempotency:
     post:
       tags:
         - transaction-data
-      summary: Regista Id transação
-      description: Regista Id transação
+      parameters:
+        - name: transactionId
+          in: path
+          description: Identificador único da transação
+          schema:
+            type: string
+          required: true
+      summary: Registra idempotencia de uma transação
       requestBody:
-        description: Regista Id transação
+        description: Cadastra transação
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/Transaction'
         required: true
       responses:
         '200':
@@ -428,14 +472,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: '#/components/schemas/TransactionResponse'          
         '400':
-          description: Status informado inválido
+          description: Corpo da requisição com informações invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
         '500':
-          description: Erro interno ao registrar id empotencia na transação
+          description: Erro interno ao realizar requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
   /registraEventosTransacao:
     post:
       tags:
@@ -447,13 +496,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/Customer'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/Customer'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Cliente'
+              $ref: '#/components/schemas/Customer'
         required: true
       responses:
         '200':
@@ -461,113 +510,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cliente'          
+                $ref: '#/components/schemas/Customer'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/Cliente'
+                $ref: '#/components/schemas/Customer'
         '400':
           description: Evento informado inválido
         '500':
           description: Erro interno ao registrar novo evento na transação
-  /buscaTransacao:
-    get:
-      tags:
-        - transaction-management
-      summary: Busca transações
-      description: ''
-      parameters:
-        - name: cpf
-          in: query
-          description: CPF do cliente
-          required: false
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Requisição processada com sucesso
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Erro de validação nos campos informados
-        '500':
-          description: Erro interno ao buscar transacao
-  /startaTransacao:
-    post:
-      tags:
-        - transaction-management
-      summary: Inicia transação
-      description: Inicia transação
-      requestBody:
-        description: Inicia transação
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-        required: true
-      responses:
-        '204':
-          description: Solicitação de processamento de transação registrada com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Transação informada invalida ou não encontrada
-        '500':
-          description: Erro interno ao iniciar o processamento de uma transação
-  /processaTransacao:
-    post:
-      tags:
-        - transaction-orchestrator
-      summary: Processa transação
-      description: Processa transação
-      requestBody:
-        description: Processa transação
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Cliente'
-        required: true
-      responses:
-        '204':
-          description: Solicitação de processamento de transação registrada com sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cliente'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Cliente'
-        '400':
-          description: Transação informada invalida ou não encontrada
-        '500':
-          description: Erro interno ao iniciar o processamento de uma transação
 components:
   schemas:
+    PostCustomerInternal:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Customer'
+        - $ref: '#/components/schemas/CustomerStatus'
     UpdateCustomerStatusRequest:
       type: object
       properties:
@@ -613,6 +570,129 @@ components:
       properties:
         name:
           type: string
-          description: Nome do cliente
         lastName:
           type: string
+        bithdate:
+          type: string
+        document:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [CPF, PASSPORT]
+            number:
+              type: string
+        contact:
+          type: object
+          description: Objeto que contém as informações de contato do cliente
+          properties:
+            email:
+              type: string
+              format: email
+            businessPhone:
+              type: string
+            personalPhone:
+              type: string
+        address:
+          type: object
+          description: Objeto que contém as informações do endereço físico do cliente
+          properties:
+            country:
+              type: string
+            state:
+              type: string
+            city:
+              type: string
+            street:
+              type: string
+            number:
+              type: string
+            zipcode:
+              type: string
+            details:
+              type: string
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: identificador único da transação
+      allOf:
+        - $ref: '#/components/schemas/Transaction'
+    Transaction:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: Identificador do cliente dono da transação
+        operationType:
+          type: string
+          enum: [BUY, SELL]
+          description:  |
+            BUY: indica se o registro em questão se refere a compra de algum ativo
+            SELL: indica se o registro em questão se refere a venda de algum ativo
+        status:
+          type: string
+          enum: [PEINDING, PENDING_APPROVALS, ON_QUEUE, PROCESSING, SUCCESS, FAILURE]
+          description: |
+            Campo faz referência ao estado atual da transação
+            PEINDING: indica que o processamento da transação está pendente 
+            PENDING_APPROVALS: indica que foi identificado a necessidade de aprovações manuais e elas estão pendentes
+            ON_QUEUE: indica que a transação foi agendada para ser processada
+            PROCESSING: indica que a transação está sendo processada
+            SUCCESS: status final que indica que a transação foi processada com sucesso
+            FAILURE: status final que indica que a transação foi processada com erro
+        idempotence:
+          type: array
+          items:
+            type: string
+            enum: [PEINDING, PENDING_APPROVALS, ON_QUEUE, PROCESSING, SUCCESS, FAILURE]
+        approvals:
+          type: object
+          description: Objeto que contempla o status das aprovações, quando pertinente
+          properties:
+            frauds:
+              type: boolean
+            backoffice:
+              type: boolean
+        asset:
+          type: object
+          description: Objeto que contempla as informações sobre o ativo negociado na transação
+          properties:
+            id:
+              type: string
+              description: Identificador único do ativo
+            unityValue:
+              type: string
+              description: Valor unitário do ativo
+            quantity:
+              type: string
+              description: Quantidade de unidades que estão sendo negociadas
+        requestedDate:
+          type: string
+          format: date
+          description: Data de quando a transação foi solicitada
+        processedDate:
+          type: string
+          format: date
+          description: Data de quando o processamento da transação foi concluído
+    TransactionEvent:
+      type: object
+    BadRequestResponse:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Descrição do erro
+        fields:
+          type: array
+          items:
+            type: object
+            properties:
+              fieldPath:
+                type: string
+                description: caminho completo do campo com erro
+              errorDescription:
+                type: string
+                description: descrição do erro que foi identificado no campo
