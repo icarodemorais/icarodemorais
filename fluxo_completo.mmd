@@ -1,0 +1,54 @@
+flowchart TD
+S([Demanda: tema de Reforma Tributária])
+subgraph A["01 MAPEAMENTO & PLANEJAMENTO"]
+A1["Entradas: pilares; jornadas; estratégia; fontes conhecidas"] --> A2["Processo: taxonomia; matriz tema x jornada; lacunas; priorização por risco"] --> A3["Saídas: catálogo mestre; matriz cobertura; backlog; owners"]
+end
+subgraph B["02 CURADORIA DE FONTES"]
+B1["Entradas: backlog; leis; atos; notas técnicas; documentos internos"] --> B2["Processo: localizar; extrair; classificar autoridade; conferir vigência; mapear evidências"] --> B3["Saídas: registro de fontes; mapa de evidências; pendências"]
+end
+G1{"Gate 1: fontes suficientes e válidas?"}
+subgraph C["03 ESTRUTURAÇÃO DO CONHECIMENTO"]
+C1["Entradas: fontes aprovadas; taxonomia; KBs existentes"] --> C2["Processo: conceitos; regras; condições; exceções; jornadas; dependências"] --> C3["Saídas: modelo de conhecimento; regras; relações; cenários"]
+end
+subgraph D["04 GERAÇÃO DE KB"]
+D1["Entradas: modelo; template; referências; glossário"] --> D2["Processo: compor texto; vincular fontes; metadados; exemplos; classificar incertezas"] --> D3["Saídas: KB candidata versionada; traceabilidade; questões abertas"]
+end
+G2{"Gate 2: integridade estrutural?"}
+subgraph E["05 VALIDAÇÃO ESPECIALIZADA"]
+E1["Entradas: KB; evidências; checklist; impactos"] --> E2["Processo humano: Tributário/Jurídico; Produto; Operações/TI; resolução de conflitos"] --> E3["Saídas: pareceres; correções; aprovações; pendências"]
+end
+G3{"Gate 3: aprovações humanas suficientes?"}
+subgraph F["06 EVALS INDEPENDENTES"]
+F1["Entradas: KB validada; golden humano; sintético; adversarial"] --> F2["Processo: executar RAG; medir retrieval; juízes independentes; verificações determinísticas; regressão"] --> F3["Saídas: relatórios; scores; falhas por severidade; ações"]
+end
+G4{"Gate 4: risco e qualidade aceitos?"}
+subgraph H["07 HOMOLOGAÇÃO & PUBLICAÇÃO"]
+H1["Entradas: KB; aprovações; relatório de Evals; configuração"] --> H2["Processo: autorizar release; indexar; controlar acesso; auditar; garantir rollback"] --> H3["Saídas: KB publicada; manifesto; trilha de auditoria"]
+end
+G5{"Gate 5: autorização final?"}
+subgraph I["08 MONITORAMENTO & EVOLUÇÃO"]
+I1["Entradas: telemetria; mudanças normativas; feedback; incidentes"] --> I2["Processo: detectar diferenças; mapear impacto; repriorizar; revalidar"] --> I3["Saídas: change requests; alertas; nova versão; indicadores"]
+end
+S-->A1
+A3-->B1
+B3-->G1
+G1--Sim-->C1
+G1-.Não.->B1
+C3-->D1
+D3-->G2
+G2--Sim-->E1
+G2-.Não.->C1
+E3-->G3
+G3--Sim-->F1
+G3-.Não.->D1
+F3-->G4
+G4--Sim-->H1
+G4-.Conteúdo.->D1
+G4-.Retrieval.->C1
+H1-->G5
+G5--Sim-->H2
+G5-.Não.->H1
+H3-->I1
+I3-.Nova fonte.->B1
+I3-.Nova lacuna.->A1
+I3-.Correção pontual.->D1
