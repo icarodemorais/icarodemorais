@@ -1,0 +1,73 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Engenharia de KBs — Reforma Tributária</title><style>body{margin:0;font:16px system-ui,-apple-system,sans-serif;color:#202638;background:#f4f6fa}header{background:#152d53;color:white;padding:38px max(24px,calc((100vw - 1100px)/2))}header h1{font-size:32px;margin:0 0 10px}header p{max-width:900px;line-height:1.6;color:#d6e2f6}main{max-width:1100px;margin:auto;padding:28px 20px}section{background:white;border:1px solid #d9e0e9;border-radius:14px;margin:18px 0;padding:24px;box-shadow:0 2px 8px #152d530a}h2{margin:0 0 16px;font-size:23px}h3{margin:20px 0 6px}p,li{line-height:1.7}.mermaid{overflow-x:auto}.links a,.tool a{display:inline-block;margin:6px 9px 6px 0;padding:10px 14px;background:#173c70;color:white;text-decoration:none;border-radius:8px}.note{color:#5b6575}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.tile{border:1px solid #dde4ef;border-radius:9px;padding:14px;background:#fafcff}.tile p{margin:4px 0}.label{font-weight:700;font-size:13px;color:#365987;text-transform:uppercase}pre{white-space:pre-wrap;word-break:break-word;background:#f0f3f9;padding:18px;border-radius:8px;max-height:500px;overflow:auto}details{margin-top:16px}summary{cursor:pointer;font-weight:600}small{color:#667}@media(max-width:650px){header{padding:25px}header h1{font-size:25px}section{padding:16px}}</style><script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';mermaid.initialize({startOnLoad:true,securityLevel:'strict',theme:'neutral',flowchart:{useMaxWidth:false,htmlLabels:true}});</script></head><body><header><h1>Engenharia de Knowledge Bases com IA</h1><p>Reforma Tributária · Processo de ponta a ponta · Inputs, processamento, outputs, validação humana, Evals independentes e governança contínua</p><div class="links"><a href="#fluxo">Fluxo completo</a><a href="#evals">Evals</a><a href="#etapas">Detalhamento</a><a href="detalhamento.md">Documentação em Markdown</a></div></header><main><section><h2>Visão geral</h2><p>Modelo operacional proposto para produzir conhecimento estruturado, rastreável e reutilizável por agentes de IA. O conteúdo é ilustrativo e não representa documentação oficial do Itaú nem interpretação tributária aprovada.</p><div class="grid"><div class="tile"><strong>8 etapas</strong><p>Da demanda ao monitoramento</p></div><div class="tile"><strong>5 Quality Gates</strong><p>Regras de bloqueio e aprovação</p></div><div class="tile"><strong>Human-in-the-loop</strong><p>Validações tributárias, operacionais e de publicação</p></div><div class="tile"><strong>Evals multmodelos</strong><p>Golden humano, sintético, adversarial e regressão</p></div></div></section><section id="fluxo"><h2>Diagrama 1 · Processo completo</h2><p class="note">O diagrama é renderizado com Mermaid. Se sua rede bloquear o carregamento externo da biblioteca, acesse o código-fonte no link abaixo.</p><div class="mermaid">flowchart TD
+S([Demanda: tema de Reforma Tributária])
+subgraph A["01 MAPEAMENTO &amp; PLANEJAMENTO"]
+A1["Entradas: pilares; jornadas; estratégia; fontes conhecidas"] --> A2["Processo: taxonomia; matriz tema x jornada; lacunas; priorização por risco"] --> A3["Saídas: catálogo mestre; matriz cobertura; backlog; owners"]
+end
+subgraph B["02 CURADORIA DE FONTES"]
+B1["Entradas: backlog; leis; atos; notas técnicas; documentos internos"] --> B2["Processo: localizar; extrair; classificar autoridade; conferir vigência; mapear evidências"] --> B3["Saídas: registro de fontes; mapa de evidências; pendências"]
+end
+G1{"Gate 1: fontes suficientes e válidas?"}
+subgraph C["03 ESTRUTURAÇÃO DO CONHECIMENTO"]
+C1["Entradas: fontes aprovadas; taxonomia; KBs existentes"] --> C2["Processo: conceitos; regras; condições; exceções; jornadas; dependências"] --> C3["Saídas: modelo de conhecimento; regras; relações; cenários"]
+end
+subgraph D["04 GERAÇÃO DE KB"]
+D1["Entradas: modelo; template; referências; glossário"] --> D2["Processo: compor texto; vincular fontes; metadados; exemplos; classificar incertezas"] --> D3["Saídas: KB candidata versionada; traceabilidade; questões abertas"]
+end
+G2{"Gate 2: integridade estrutural?"}
+subgraph E["05 VALIDAÇÃO ESPECIALIZADA"]
+E1["Entradas: KB; evidências; checklist; impactos"] --> E2["Processo humano: Tributário/Jurídico; Produto; Operações/TI; resolução de conflitos"] --> E3["Saídas: pareceres; correções; aprovações; pendências"]
+end
+G3{"Gate 3: aprovações humanas suficientes?"}
+subgraph F["06 EVALS INDEPENDENTES"]
+F1["Entradas: KB validada; golden humano; sintético; adversarial"] --> F2["Processo: executar RAG; medir retrieval; juízes independentes; verificações determinísticas; regressão"] --> F3["Saídas: relatórios; scores; falhas por severidade; ações"]
+end
+G4{"Gate 4: risco e qualidade aceitos?"}
+subgraph H["07 HOMOLOGAÇÃO &amp; PUBLICAÇÃO"]
+H1["Entradas: KB; aprovações; relatório de Evals; configuração"] --> H2["Processo: autorizar release; indexar; controlar acesso; auditar; garantir rollback"] --> H3["Saídas: KB publicada; manifesto; trilha de auditoria"]
+end
+G5{"Gate 5: autorização final?"}
+subgraph I["08 MONITORAMENTO &amp; EVOLUÇÃO"]
+I1["Entradas: telemetria; mudanças normativas; feedback; incidentes"] --> I2["Processo: detectar diferenças; mapear impacto; repriorizar; revalidar"] --> I3["Saídas: change requests; alertas; nova versão; indicadores"]
+end
+S-->A1
+A3-->B1
+B3-->G1
+G1--Sim-->C1
+G1-.Não.->B1
+C3-->D1
+D3-->G2
+G2--Sim-->E1
+G2-.Não.->C1
+E3-->G3
+G3--Sim-->F1
+G3-.Não.->D1
+F3-->G4
+G4--Sim-->H1
+G4-.Conteúdo.->D1
+G4-.Retrieval.->C1
+H1-->G5
+G5--Sim-->H2
+G5-.Não.->H1
+H3-->I1
+I3-.Nova fonte.->B1
+I3-.Nova lacuna.->A1
+I3-.Correção pontual.->D1</div><div class="links"><a href="fluxo_completo.mmd">Abrir código Mermaid</a></div></section><section id="evals"><h2>Diagrama 2 · Arquitetura de avaliação</h2><div class="mermaid">flowchart TD
+K["KB candidata aprovada"] --> R["Agente em teste: retrieval + geração"]
+GH["Golden humano: perguntas; respostas; evidências; fatos obrigatórios"] --> T["Suíte versionada"]
+GS["Golden sintético: paráfrases; combinações; casos de borda"] --> V{"Verificação humana proporcional ao risco"}
+V--Aprovado-->T
+GA["Adversarial: perguntas ambíguas; regra revogada; falta de evidência"] --> T
+T --> R
+R --> X["Métricas de retrieval: recall e relevância"]
+R --> A["Avaliador independente A: correção; fidelidade; citação"]
+R --> B["Avaliador independente B: completude; exceções; contradições"]
+R --> C["Testes determinísticos: schema; datas; referências"]
+X-->Q["Consolidação de scores e evidências"]
+A-->Q
+B-->Q
+C-->Q
+Q-->G{"Gate 4: sem falha crítica e dentro dos limites?"}
+G--Sim-->P["Elegível para homologação"]
+G--Não-->F["Triagem: KB vs retrieval vs prompt vs dataset"]
+F-->N["Nova versão e regressão"]
+N-->R</div><div class="links"><a href="evals.mmd">Abrir código Mermaid de Evals</a></div></section><section id="etapas"><h2>Detalhamento operacional por etapa</h2><article class="tile" style="margin:12px 0"><h3>01 · Mapeamento e planejamento</h3><p><span class="label">Inputs:</span> Demanda, objetivos, pilares, jornadas e produtos</p><p><span class="label">Processamento:</span> Construir taxonomia e matriz de cobertura; identificar lacunas, relações e prioridades</p><p><span class="label">Outputs:</span> Catálogo mestre, backlog, responsáveis e matriz de cobertura</p><p><span class="label">Controle:</span> Aprovação do escopo e critérios de completude</p></article><article class="tile" style="margin:12px 0"><h3>02 · Curadoria de fontes</h3><p><span class="label">Inputs:</span> Backlog, leis, normas, notas técnicas e documentação autorizada</p><p><span class="label">Processamento:</span> Extrair, classificar autoridade, verificar vigência, mapear evidências e conflitos</p><p><span class="label">Outputs:</span> Registro de fontes, mapa de evidências e pendências</p><p><span class="label">Controle:</span> Gate 1: admissibilidade e suficiência</p></article><article class="tile" style="margin:12px 0"><h3>03 · Estruturação do conhecimento</h3><p><span class="label">Inputs:</span> Taxonomia, fontes aprovadas e KBs existentes</p><p><span class="label">Processamento:</span> Modelar conceitos, regras, condições, exceções, fluxos, atores e relações</p><p><span class="label">Outputs:</span> Modelo estruturado, grafo de dependências, catálogo de cenários</p><p><span class="label">Controle:</span> Rastreabilidade e consistência</p></article><article class="tile" style="margin:12px 0"><h3>04 · Geração da KB candidata</h3><p><span class="label">Inputs:</span> Modelo de conhecimento, template, glossário e evidências</p><p><span class="label">Processamento:</span> Redigir seis camadas; vincular citações; adicionar exemplos, metadados e incertezas</p><p><span class="label">Outputs:</span> KB candidata, histórico, mapa de rastreabilidade e pendências</p><p><span class="label">Controle:</span> Gate 2: integridade estrutural</p></article><article class="tile" style="margin:12px 0"><h3>05 · Validação especializada</h3><p><span class="label">Inputs:</span> KB, fontes, impactos e checklist</p><p><span class="label">Processamento:</span> Revisão humana tributária, de produto e operacional; corrigir divergências</p><p><span class="label">Outputs:</span> Pareceres, registro de aprovação, KB validada</p><p><span class="label">Controle:</span> Gate 3: aprovações por criticidade</p></article><article class="tile" style="margin:12px 0"><h3>06 · Evals independentes</h3><p><span class="label">Inputs:</span> KB validada, Golden Dataset, casos sintéticos e adversariais</p><p><span class="label">Processamento:</span> Executar RAG, medir retrieval, correção e evidências; comparar modelos; testes de regressão</p><p><span class="label">Outputs:</span> Relatório, scores, evidências, falhas classificadas</p><p><span class="label">Controle:</span> Gate 4: limiares e ausência de falhas críticas</p></article><article class="tile" style="margin:12px 0"><h3>07 · Homologação e publicação</h3><p><span class="label">Inputs:</span> KB, aprovações, Evals e configuração do agente</p><p><span class="label">Processamento:</span> Autorizar release, indexar, auditar, controlar acesso e preparar rollback</p><p><span class="label">Outputs:</span> KB publicada, manifesto de release e índice RAG</p><p><span class="label">Controle:</span> Gate 5: autorização formal</p></article><article class="tile" style="margin:12px 0"><h3>08 · Monitoramento e evolução</h3><p><span class="label">Inputs:</span> Telemetria, novas fontes, feedback e incidentes</p><p><span class="label">Processamento:</span> Detectar mudanças, analisar impacto, abrir solicitações e reexecutar avaliações</p><p><span class="label">Outputs:</span> Backlog de atualização, alertas, métricas e novas versões</p><p><span class="label">Controle:</span> Revisão contínua e SLA por risco</p></article></section><section><h2>Documentação completa</h2><p>O documento Markdown acompanha os contratos entre etapas, o template de KB, o conjunto de testes, papéis, métricas, critérios de bloqueio, triagem de falhas e plano incremental.</p><div class="links"><a href="detalhamento.md">Ler documentação</a><a href="README.md">Instruções</a></div><p class="note">A publicação desta página não disponibiliza quaisquer dados corporativos internos. Antes de incorporar materiais do banco, usar apenas repositórios aprovados pela governança de segurança.</p></section></main></body></html>
