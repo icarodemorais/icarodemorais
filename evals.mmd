@@ -1,0 +1,20 @@
+flowchart TD
+K["KB candidata aprovada"] --> R["Agente em teste: retrieval + geração"]
+GH["Golden humano: perguntas; respostas; evidências; fatos obrigatórios"] --> T["Suíte versionada"]
+GS["Golden sintético: paráfrases; combinações; casos de borda"] --> V{"Verificação humana proporcional ao risco"}
+V--Aprovado-->T
+GA["Adversarial: perguntas ambíguas; regra revogada; falta de evidência"] --> T
+T --> R
+R --> X["Métricas de retrieval: recall e relevância"]
+R --> A["Avaliador independente A: correção; fidelidade; citação"]
+R --> B["Avaliador independente B: completude; exceções; contradições"]
+R --> C["Testes determinísticos: schema; datas; referências"]
+X-->Q["Consolidação de scores e evidências"]
+A-->Q
+B-->Q
+C-->Q
+Q-->G{"Gate 4: sem falha crítica e dentro dos limites?"}
+G--Sim-->P["Elegível para homologação"]
+G--Não-->F["Triagem: KB vs retrieval vs prompt vs dataset"]
+F-->N["Nova versão e regressão"]
+N-->R
